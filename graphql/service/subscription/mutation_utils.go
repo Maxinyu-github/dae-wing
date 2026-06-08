@@ -86,7 +86,10 @@ func _fetchLinks(subscriptionLink string, transport http.RoundTripper, timeout t
 	noLogger.SetOutput(io.Discard)
 	links, err = subscription.ResolveSubscriptionAsSIP008(noLogger, b)
 	if err != nil {
-		links = subscription.ResolveSubscriptionAsBase64(noLogger, b)
+		links, err = subscription.ResolveSubscriptionAsClashYaml(noLogger, b)
+		if err != nil {
+			links = subscription.ResolveSubscriptionAsBase64(noLogger, b)
+		}
 	}
 	if len(links) == 0 {
 		return nil, fmt.Errorf("fetched but no any node was found")
